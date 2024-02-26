@@ -7,7 +7,6 @@ import (
 	"errors"
 	"image/color"
 	"io"
-	"log"
 	"math"
 	"math/rand"
 	"os"
@@ -322,11 +321,21 @@ func showLibrary() {
 				showErrorDialog(localization.LoadLocalizedPhrase(conf.Language, "EditLibraryTitleError"))
 				return
 			}
-			lib, err = services.UpdateLibrary(rootUriPath, nameEntry.Text, lib, "name", nameEntry.Text)
+			_, err = services.UpdateLibrary(rootUriPath, nameEntry.Text, lib, "name", nameEntry.Text)
 			if err != nil {
 				showErrorDialog(localization.LoadLocalizedPhrase(conf.Language, "EditLibraryTitleError"))
 				return
 			}
+			strikeValue := getStrike(lib.Name)
+			stikeUpdatedValue := a.Preferences().String("strikeUpdated_" + lib.Name)
+			percentValue := a.Preferences().Int("percent_" + lib.Name)
+			a.Preferences().RemoveValue("strike_" + lib.Name)
+			a.Preferences().RemoveValue("strikeUpdated_" + lib.Name)
+			a.Preferences().RemoveValue("percent_" + lib.Name)
+			a.Preferences().SetInt("strike_"+nameEntry.Text, strikeValue)
+			a.Preferences().SetString("strikeUpdated_"+nameEntry.Text, stikeUpdatedValue)
+			a.Preferences().SetInt("percent_"+nameEntry.Text, percentValue)
+
 			showMainWindow()
 		}, masterWindow)
 		renamingDialog.Show()
@@ -354,6 +363,9 @@ func showLibrary() {
 	exportButton := widget.NewButtonWithIcon("", theme.UploadIcon(), func() {
 		chooseLocation := dialog.NewFileSave(func(uc fyne.URIWriteCloser, err error) {
 			if err != nil {
+				return
+			}
+			if uc == nil {
 				return
 			}
 			defer uc.Close()
@@ -1187,9 +1199,7 @@ func matchingCardShow(data services.LibraryCardMatching, cnt *fyne.Container, ne
 		for _, row := range rows.Objects {
 			firR := row.(*fyne.Container).Objects[0].(*widget.Label)
 			secR := row.(*fyne.Container).Objects[1].(*widget.Select)
-			log.Println(firR, secR)
 			for _, item := range data.Items {
-				log.Println(item)
 				if item.FirstString == firR.Text && item.SecondString != secR.Selected {
 					failLabel := canvas.NewText(localization.LoadLocalizedPhrase(conf.Language, "ThatsWrong"), color.NRGBA{R: 255, G: 43, B: 43, A: 255})
 					showAnswerButton := widget.NewButton(localization.LoadLocalizedPhrase(conf.Language, "ShowAnswer"), func() {})
@@ -1229,7 +1239,6 @@ func matchingCardShow(data services.LibraryCardMatching, cnt *fyne.Container, ne
 		cnt.Add(fullAnswer)
 		cnt.Refresh()
 		nextB.Enable()
-		return
 	}
 
 	cnt.Remove(loadingBar)
