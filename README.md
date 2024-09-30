@@ -2,7 +2,7 @@
 
 <div align="center"><img src="https://i.postimg.cc/DZYJxcK3/icon.png" alt="The EduQuiz icon - an orange bulb with a lightning in it. A dark green background." width="128" height="128"><br/><h1>EduQuiz</h1></div>
 <div>
-  <p>Did you use Duolingo? And Anki? I used them both, and I thought, it would be fascinating to combine the Duolingo playful style and the ability to create own cards from Anki.<br/>That's how I created EduQuiz. It allows you to create libraries or import them from an external source. The libraries support cards of different types, which you can create, then pass. The app also has the strike counter.</p>
+  <p>Did you use Duolingo? And Anki? I used them both, and I thought, it would be fascinating to combine the Duolingo playful style and the ability to create own cards from Anki.<br/>That's how I created EduQuiz. It allows you to create libraries or import them from an external source. The libraries support cards of different types, which you can create, then pass. The app also has a streak counter.</p>
   <h3>Supported languages:</h3>
   <ul>
     <li>English</li>
